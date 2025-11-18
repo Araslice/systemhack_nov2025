@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Результат анализа</title>
+
+    <!-- JetBrains Mono -->
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+    <!-- marked.js -->
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+
+    <style>
+        body {
+            background-color: #282C35;
+            font-family: "JetBrains Mono", monospace;
+            color: #FFFFFF;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* Логотип */
+        .logo {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            height: 60px;
+        }
+
+        /* Основной контент (не отчёт) */
+        .content {
+            padding: 120px 40px 40px 40px; /* Отступ сверху под логотипом */
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            font-size: 32px;
+            font-weight: 500;
+            color: #FFFFFF;
+            margin-bottom: 30px;
+        }
+
+        #score {
+            font-size: 28px;
+            font-weight: 500;
+            margin-bottom: 10px;
+        }
+
+        #errors {
+            font-size: 22px;
+            margin-bottom: 40px;
+        }
+
+        /* FULL-WIDTH контейнер отчёта */
+        #report {
+            background-color: #373A41;
+            padding: 40px 60px;
+
+            /* Full width magic */
+            width: 100vw;
+            position: relative;
+            left: 50%;
+            margin-left: -50vw;
+
+            border-radius: 0;
+
+            /* Перенос длинных строк */
+            overflow-x: auto;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+
+            font-size: 18px;
+            line-height: 1.6;
+            white-space: pre-wrap;
+            box-sizing: border-box;
+        }
+
+        .back-container {
+            max-width: 900px;
+            margin: 30px auto;
+            padding: 0 40px 40px 40px;
+        }
+
+        .back-link {
+            font-size: 22px;
+            color: #7E4BFC;
+            text-decoration: none;
+            font-weight: 400;
+        }
+
+        .back-link:hover {
+            opacity: 0.8;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Логотип -->
+    <img src="{{ url_for('static', filename='logo.png') }}" class="logo">
+
+    <!-- Верхняя часть страницы -->
+    <div class="content">
+
+        <h1>Отчёт от ИИ</h1>
+
+        <div id="score"></div>
+
+        <div id="errors">
+            <div id="critical"></div>
+            <div id="noncritical"></div>
+        </div>
+
+    </div>
+
+    <!-- ОТЧЁТ во всю ширину -->
+    <div id="report"></div>
+
+    <!-- Нижний блок -->
+    <div class="back-container">
+        <a href="/" class="back-link">← Назад</a>
+    </div>
+
+    <!-- JS-логика -->
+    <script>
+        const markdownContent = {{ report | tojson }};
+        const score = {{ score | tojson }};
+        const criticalErrors = {{ critical_errors | tojson }};
+        const noncriticalErrors = {{ noncritical_errors | tojson }};
+
+        document.getElementById("report").innerHTML = marked.parse(markdownContent);
+
+        function scoreColor(value) {
+            if (value <= 49) return "red";
+            if (value <= 74) return "orange";
+            if (value <= 89) return "gold";
+            return "green";
+        }
+
+        const scoreElement = document.getElementById("score");
+        scoreElement.textContent = `Оценка инклюзивности: ${score} из 100`;
+        scoreElement.style.color = scoreColor(score);
+
+        const criticalEl = document.getElementById("critical");
+        criticalEl.textContent = `Критические ошибки: ${criticalErrors} из 11`;
+        criticalEl.style.color = "red";
+
+        const noncriticalEl = document.getElementById("noncritical");
+        noncriticalEl.textContent = `Некритические ошибки: ${noncriticalErrors} из 12`;
+        noncriticalEl.style.color = "gold";
+    </script>
+
+</body>
+</html>
