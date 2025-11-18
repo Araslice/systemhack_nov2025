@@ -68,3 +68,8 @@
 3. Создайте файл окружения `.env` в той же директории, где находится проект, и добавьте ключ доступа от [Gigachat API](https://developers.sber.ru/portal/products/gigachat-api)</br>
    Должно выглядеть так `SBERBANK_API_KEY="..."`
 4. Запустите `app.py` и перейдите в браузере по ссылке `http://127.0.0.1:5000/`
+
+## Отдельная благодарность...
+
+* Александре Акуловой и Малике Байсуновой за [логотип](https://github.com/Araslice/systemhack_nov2025/blob/main/static/logo.png) и помощь с дизайном
+* Егору Кабайлову за помощь в составлении [файла с ошибками](https://github.com/Araslice/systemhack_nov2025/blob/main/mistakes.json)
